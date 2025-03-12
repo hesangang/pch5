@@ -148,7 +148,8 @@ onUnmounted(() => {
   left: 0;
   right: 0;
   z-index: 100;
-  background-color: var(--bg-color);
+  background-color: #333;
+  color: white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
   .header-content {
@@ -194,9 +195,12 @@ onUnmounted(() => {
     justify-content: center;
     align-items: center;
     background-color: #f5f7fa;
-    color: var(--text-color);
+    color: white;
     text-align: center;
     padding: 20px;
+    background-image: url('../assets/banner.jpg');
+    background-size: cover;
+    background-position: center;
 
     h2 {
       font-size: 48px;
@@ -217,7 +221,7 @@ onUnmounted(() => {
 
 .features {
   padding: 80px 0;
-  background-color: #f5f7fa;
+  background-color: #f9f9f9;
 
   .features-grid {
     display: grid;
@@ -336,4 +340,4 @@ onUnmounted(() => {
     }
   }
 }
-</style> 
+</style>

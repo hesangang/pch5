@@ -1,14 +1,84 @@
 <script setup>
 import HelloWorld from './components/HelloWorld.vue'
+import TechPortal from './views/TechPortal.vue'
 </script>
 
 <template>
-  <router-view></router-view>
+  <div class="app-container">
+    <header class="app-header">
+    </header>
+    <main class="app-main">
+      <TechPortal msg="Vite + Vue" />
+    </main>
+  </div>
 </template>
 
-<style>
-#app {
+<style scoped>
+.app-container {
   width: 100%;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.app-header {
+  background-color: #333;
+  color: white;
+  width: 100%;
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.logo {
+  width: 8rem;
+  height: auto;
+  transition: transform 0.3s ease;
+  filter: brightness(150%);
+}
+
+.logo:hover {
+  transform: scale(1.1);
+}
+
+.app-main {
+  flex: 1;
+  width: 100%;
+  max-width: 128rem;
+  padding: 0 2rem;
+  box-sizing: border-box;
+  background-color: #f9f9f9;
+}
+
+/* 移动端适配 */
+@media screen and (max-width: 768px) {
+  .app-header {
+    padding: 1.5rem;
+  }
+  
+  .logo {
+    width: 6rem;
+  }
+  
+  .app-main {
+    padding: 0 1.5rem;
+  }
+}
+
+/* 小屏幕手机适配 */
+@media screen and (max-width: 480px) {
+  .app-header {
+    padding: 1rem;
+  }
+  
+  .logo {
+    width: 5rem;
+  }
+  
+  .app-main {
+    padding: 0 1rem;
+  }
 }
 </style>

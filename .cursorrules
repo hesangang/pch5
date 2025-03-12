@@ -1,0 +1,33 @@
+使用响应式布局
+## 1、调整页面布局
+- 使用 flex、grid 布局代替固定宽度布局。
+- vw/vh、% 代替 px 进行尺寸适配。
+- 通过 @media 媒体查询，调整样式：
+- rem 结合 html { font-size: 62.5%; }，适配不同屏幕。
+
+参考代码：
+@media (max-width: 768px) {
+  .menu { display: none; } /* 移动端隐藏侧边栏 */
+}
+
+## 2、使用 meta viewport 适配移动端 在 index.html 的 <head> 中添加：
+参考代码：
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+## 3、适配 Element UI
+
+- 调整 el-table、el-form 等组件的宽度，保证在小屏幕可用：
+参考代码：
+.el-table { width: 100%; overflow-x: auto; }
+
+## 4、动态调整菜单
+
+- PC 端使用 el-menu 侧边栏，移动端使用 el-drawer 代替：
+参考代码：
+<el-drawer v-if="isMobile" v-model="drawerVisible">
+  <el-menu>...</el-menu>
+</el-drawer>
+
+## 5、事件交互优化
+移动端替换 hover 交互，改用 click 事件。
+PC 端 表格分页 适配 H5 滚动加载（上拉加载）。
