@@ -33,7 +33,6 @@
         <section class="card-section">
           <div class="category-header">
             <h3 class="category-title">研发工具</h3>
-            <a href="#" class="view-all">查看全部</a>
           </div>
           <div class="card-grid">
             <div v-for="(item, index) in filteredDevTools" 
@@ -54,7 +53,6 @@
         <section class="card-section">
           <div class="category-header">
             <h3 class="category-title">混合云</h3>
-            <a href="#" class="view-all">查看全部</a>
           </div>
           <div class="card-grid">
             <div v-for="(item, index) in filteredCloudServices" 
@@ -75,7 +73,6 @@
         <section class="card-section">
           <div class="category-header">
             <h3 class="category-title">AI工具</h3>
-            <a href="#" class="view-all">查看全部</a>
           </div>
           <div class="card-grid">
             <div v-for="(item, index) in aiTools" 
@@ -96,7 +93,6 @@
         <section class="card-section">
           <div class="category-header">
             <h3 class="category-title">云服务</h3>
-            <a href="#" class="view-all">查看全部</a>
           </div>
           <div class="card-grid">
             <div v-for="(item, index) in cloudServices" 
@@ -115,26 +111,6 @@
       </div>
     </pull-refresh>
     
-    <!-- 移动端底部导航 -->
-    <div class="mobile-tabbar" :class="{ 'tabbar-hidden': !isTabbarVisible }">
-      <div class="tab-item active">
-        <i class="tab-icon home-icon"></i>
-        <span>首页</span>
-      </div>
-      <div class="tab-item">
-        <i class="tab-icon tools-icon"></i>
-        <span>工具</span>
-      </div>
-      <div class="tab-item">
-        <i class="tab-icon cloud-icon"></i>
-        <span>云服务</span>
-      </div>
-      <div class="tab-item">
-        <i class="tab-icon user-icon"></i>
-        <span>我的</span>
-      </div>
-    </div>
-
     <!-- 登录弹窗 -->
     <div class="login-modal" v-if="showLoginModal">
       <div class="modal-content">
@@ -362,6 +338,8 @@ const handleLoadMore = () => {
   min-height: 100vh;
   background-color: var(--bg-color);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  overflow-x: hidden;
+  position: relative;
 }
 
 /* 导航栏样式 */
@@ -834,8 +812,26 @@ const handleLoadMore = () => {
 
 /* 移动端适配增强 */
 @media screen and (max-width: 768px) {
+  .tech-portal {
+    width: 100vw;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .content {
+    padding: 1.4rem;
+    padding-bottom: calc(6rem + env(safe-area-inset-bottom));
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
+    margin: 0;
+  }
+  
   .nav-header {
     padding: 0.8rem 1.4rem;
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
   }
   
   .logo-text {
@@ -888,11 +884,6 @@ const handleLoadMore = () => {
     display: flex;
   }
   
-  .content {
-    padding: 1.4rem;
-    padding-bottom: calc(6rem + env(safe-area-inset-bottom));
-  }
-  
   .page-header {
     flex-direction: column;
     align-items: flex-start;
@@ -938,6 +929,17 @@ const handleLoadMore = () => {
 
 /* 小屏幕手机适配 */
 @media screen and (max-width: 480px) {
+  .tech-portal {
+    width: 100vw;
+    max-width: 100%;
+  }
+
+  .content {
+    padding: 1rem;
+    width: 100%;
+    max-width: 100vw;
+  }
+  
   .nav-header {
     padding: 0.7rem 1rem;
   }
@@ -989,6 +991,15 @@ const handleLoadMore = () => {
 
 /* 超小屏幕适配 */
 @media screen and (max-width: 360px) {
+  .tech-portal {
+    width: 100vw;
+    max-width: 100%;
+  }
+
+  .content {
+    padding: 0.8rem;
+  }
+  
   .card-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.6rem;

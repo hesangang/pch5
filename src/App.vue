@@ -5,8 +5,6 @@ import TechPortal from './views/TechPortal.vue'
 
 <template>
   <div class="app-container">
-    <header class="app-header">
-    </header>
     <main class="app-main">
       <TechPortal msg="Vite + Vue" />
     </main>
@@ -26,7 +24,7 @@ import TechPortal from './views/TechPortal.vue'
   background-color: #333;
   color: white;
   width: 100%;
-  padding: 2rem;
+  padding: 0rem;
   display: flex;
   justify-content: center;
   box-sizing: border-box;
@@ -47,7 +45,6 @@ import TechPortal from './views/TechPortal.vue'
   flex: 1;
   width: 100%;
   max-width: 128rem;
-  padding: 0 2rem;
   box-sizing: border-box;
   background-color: #f9f9f9;
 }
@@ -62,9 +59,7 @@ import TechPortal from './views/TechPortal.vue'
     width: 6rem;
   }
   
-  .app-main {
-    padding: 0 1.5rem;
-  }
+
 }
 
 /* 小屏幕手机适配 */
