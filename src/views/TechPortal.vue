@@ -219,7 +219,7 @@ const hotTickets = [
 
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr)); /* 调小卡片列最小宽度 */
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); /* H5适配调整列宽 */
   gap: 2rem; /* 调小卡片间距 */
 }
 
@@ -248,7 +248,10 @@ const hotTickets = [
 }
 
 .card-name {
-  font-size: 1.4rem; /* 原 1.6rem */
+  font-size: 1.2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   color: #333;
   flex: 1;
 }
@@ -332,44 +335,39 @@ const hotTickets = [
 }
 
 /* 新增小屏幕适配样式 */
+/* 修改移动端布局，确保一行展示4个元素 */
 @media screen and (max-width: 480px) {
-  .card-grid {
-    grid-template-columns: repeat(2, 1fr); /* 移动端一行展示两个卡片 */
-    gap: 0.8rem; /* 进一步调小卡片间距 */
+  .card-name {
+    font-size: 1rem;
   }
-}
-
-@media screen and (max-width: 480px) {
-  .nav-header {
-    padding: 0.8rem; /* 进一步调小导航栏内边距 */
-  }
-
-  .logo img {
-    height: 2rem; /* 进一步调小 logo 高度 */
-  }
-
-  .user-info img {
-    width: 2rem; /* 进一步调小用户头像宽度 */
-    height: 2rem; /* 进一步调小用户头像高度 */
-  }
-
-  .section-title {
-    font-size: 1.8rem; /* 进一步调小标题字体大小 */
-    margin-bottom: 1.2rem; /* 进一步调小标题底部间距 */
-  }
-
-  .category-title {
-    font-size: 1.4rem; /* 原 1.6rem */
-    margin-bottom: 1.5rem; /* 调小分类标题底部间距 */
-    color: #666;
-  }
-
-  .card-grid {
-    grid-template-columns: repeat(4, 1fr); 
-  }
-
   .card {
-    padding: 1rem; /* 进一步调小卡片内边距 */
+    padding: 0.8rem;
+    gap: 0.8rem;
   }
 }
+
+@media screen and (max-width: 375px) {
+  .card-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.3rem;
+  }
+  .card-name {
+    font-size: 0.9rem;
+  }
+}
+  .card-grid {
+    grid-template-columns: repeat(4, 1fr); /* 移动端一行展示四个卡片 */
+    gap: 0.5rem; /* 进一步调小卡片间距 */
+  }
+  .card-name {
+    font-size: 1.1rem; /* 进一步调小移动端卡片名称字体大小 */
+  }
+  .category-title {
+    font-size: 1.3rem; /* 进一步调小移动端分类标题字体大小 */
+  }
+  .section-title {
+    font-size: 1.6rem; /* 进一步调小移动端主标题字体大小 */
+  }
+  /* 可根据需要添加更多字体样式调整 */
+
 </style>
