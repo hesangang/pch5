@@ -6,7 +6,15 @@
         <img :src="logoImg" alt="Logo">
         <span class="logo-text">技术门户</span>
       </div>
-      <div class="nav-menu" :class="{ 'active': isMenuOpen }">
+      <el-drawer v-if="isMobile" v-model="isMenuOpen" direction="ltr" size="80%">
+        <el-menu default-active="1" class="el-menu-vertical-demo">
+          <el-menu-item index="1">技术门户</el-menu-item>
+          <el-menu-item index="2">工单中心</el-menu-item>
+          <el-menu-item index="3">研发指引</el-menu-item>
+          <el-menu-item index="4">开发工具</el-menu-item>
+        </el-menu>
+      </el-drawer>
+      <div class="nav-menu" v-else :class="{ 'active': isMenuOpen }">
         <a href="#" class="nav-item active">技术门户</a>
         <a href="#" class="nav-item">工单中心</a>
         <a href="#" class="nav-item">研发指引</a>
