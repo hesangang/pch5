@@ -116,6 +116,27 @@
             </div>
           </div>
         </section>
+        
+        <!-- 工单中心区域 -->
+        <section class="card-section">
+          <div class="category-header">
+            <h3 class="category-title">工单中心</h3>
+          </div>
+          <div class="card-grid">
+            <div v-for="(item, index) in filteredWorkOrders" 
+                :key="index" 
+                class="card"
+                @click="openCard(item)"
+                @touchstart="handleTouchStart"
+                @touchend="handleTouchEnd">
+              <div class="card-content">
+                <span class="card-name">{{ item.name }}</span>
+              </div>
+              <span v-if="item.hot" class="hot-tag">热</span>
+            </div>
+          </div>
+        </section>
+        
       </div>
     </pull-refresh>
     
@@ -282,6 +303,44 @@ const aiTools = ref([
   { name: 'AI数据分析', icon: logoImg, desc: '智能数据处理' },
   { name: '知识库智能搜索', icon: logoImg, hot: true, desc: '智能文档检索' }
 ])
+
+// 工单中心数据
+const workOrders = ref([
+  {
+    name: '问题工单',
+    icon: 'issue-ticket',
+    hot: true,
+    description: '提交和跟踪技术问题'
+  },
+  {
+    name: '需求工单',
+    icon: 'requirement-ticket',
+    hot: false,
+    description: '提交新功能或改进需求'
+  },
+  {
+    name: '运维工单',
+    icon: 'ops-ticket',
+    hot: true,
+    description: '服务器和系统维护请求'
+  },
+  {
+    name: '故障工单',
+    icon: 'fault-ticket',
+    hot: false,
+    description: '报告系统故障和错误'
+  }
+])
+
+// 计算属性
+const filteredWorkOrders = computed(() => {
+  if (!searchText.value) return workOrders.value
+  const text = searchText.value.toLowerCase()
+  return workOrders.value.filter(item => 
+    item.name.toLowerCase().includes(text) || 
+    item.description.toLowerCase().includes(text)
+  )
+})
 
 // 过滤搜索结果
 const filteredDevTools = computed(() => {
@@ -1021,5 +1080,58 @@ const handleLoadMore = () => {
   .card-name {
     font-size: 0.9rem;
   }
+}
+
+/* 工单中心样式 */
+.card-section {
+  margin-bottom: 1.5rem;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+  padding: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .card-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.8rem;
+    padding: 0.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 0.5rem;
+  }
+}
+
+.card {
+  position: relative;
+  background: var(--el-bg-color);
+  border-radius: 8px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.15);
+}
+
+.hot-tag {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: var(--el-color-danger);
+  color: white;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
 }
 </style>
