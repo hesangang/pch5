@@ -117,29 +117,29 @@
           </div>
         </section>
         
-        <!-- 工单中心区域 -->
-        <section class="card-section">
-          <div class="category-header">
-            <h3 class="category-title">工单中心</h3>
-          </div>
-          <div class="card-grid">
-            <div v-for="(item, index) in filteredWorkOrders" 
-                :key="index" 
-                class="card"
-                @click="openCard(item)"
-                @touchstart="handleTouchStart"
-                @touchend="handleTouchEnd">
-              <div class="card-content">
-                <span class="card-name">{{ item.name }}</span>
-              </div>
-              <span v-if="item.hot" class="hot-tag">热</span>
-            </div>
-          </div>
-        </section>
-        
       </div>
     </pull-refresh>
     
+    <!-- 移动端底部导航 -->
+    <div class="mobile-tabbar" v-if="isMobile">
+      <div class="tab-item" @click="navigateTo('技术门户')">
+        <div class="tab-icon home-icon"></div>
+        <span>技术门户</span>
+      </div>
+      <div class="tab-item" @click="navigateTo('工单中心')">
+        <div class="tab-icon tools-icon"></div>
+        <span>工单中心</span>
+      </div>
+      <div class="tab-item" @click="navigateTo('研发指引')">
+        <div class="tab-icon cloud-icon"></div>
+        <span>研发指引</span>
+      </div>
+      <div class="tab-item" @click="navigateTo('开发工具')">
+        <div class="tab-icon user-icon"></div>
+        <span>开发工具</span>
+      </div>
+    </div>
+
     <!-- 登录弹窗 -->
     <div class="login-modal" v-if="showLoginModal">
       <div class="modal-content">
@@ -380,6 +380,12 @@ const handleLoadMore = () => {
     ]
     cloudServices.value.push(...newItems)
   }
+}
+
+// 导航到指定页面
+const navigateTo = (page) => {
+  console.log(`导航到: ${page}`);
+  // 这里可以添加导航逻辑，比如使用 Vue Router
 }
 </script>
 
@@ -845,10 +851,16 @@ const handleLoadMore = () => {
   flex: 1;
   height: 100%;
   color: var(--text-light);
-  font-size: 1.1rem;
+  font-size: 1.2rem;
+  font-weight: 500;
+  transition: color 0.3s ease;
 }
 
 .tab-item.active {
+  color: var(--primary-color);
+}
+
+.tab-item:hover {
   color: var(--primary-color);
 }
 
