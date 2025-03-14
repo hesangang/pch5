@@ -83,7 +83,7 @@
             <h3 class="category-title">AI工具</h3>
           </div>
           <div class="card-grid">
-            <div v-for="(item, index) in aiTools" 
+            <div v-for="(item, index) in filteredAiTools" 
                 :key="index" 
                 class="card"
                 @click="openCard(item)"
@@ -103,7 +103,7 @@
             <h3 class="category-title">云服务</h3>
           </div>
           <div class="card-grid">
-            <div v-for="(item, index) in cloudServices" 
+            <div v-for="(item, index) in filteredCloudServices" 
                 :key="index" 
                 class="card"
                 @click="openCard(item)"
@@ -201,6 +201,40 @@ const userInfo = ref({
   avatar: ''
 })
 
+// 整合数据
+const allData = ref({
+  devTools: [
+    { name: 'CODING', icon: logoImg, hot: true, desc: '代码托管平台' },
+    { name: '集成平台', icon: logoImg, desc: '系统集成工具' },
+    { name: '伊利通服务', icon: logoImg, desc: '通用服务平台' },
+    { name: '权限中心', icon: logoImg, desc: '统一权限管理' },
+    { name: '低代码', icon: logoImg, hot: true, desc: '快速应用构建' },
+    { name: '数据平台', icon: logoImg, desc: '数据分析工具' },
+    { name: '测试平台', icon: logoImg, hot: true, desc: '自动化测试' },
+    { name: '监控中心', icon: logoImg, desc: '系统监控' }
+  ],
+  cloudServices: [
+    { name: '便签办公系统', icon: logoImg, hot: true, desc: '高效办公工具' },
+    { name: '私有云K8s-测试', icon: logoImg, hot: true, desc: '容器编排测试环境' },
+    { name: '私有云K8s-生产', icon: logoImg, hot: true, desc: '容器编排生产环境' },
+    { name: '云存储服务', icon: logoImg, desc: '对象存储' },
+    { name: '数据库服务', icon: logoImg, desc: '关系型数据库' },
+    { name: '消息队列', icon: logoImg, desc: '分布式消息服务' }
+  ],
+  aiTools: [
+    { name: 'YILI-GPT', icon: logoImg, hot: true, desc: 'AI助手' },
+    { name: 'AI代码助手', icon: logoImg, desc: '智能编程辅助' },
+    { name: 'AI数据分析', icon: logoImg, desc: '智能数据处理' },
+    { name: '知识库智能搜索', icon: logoImg, hot: true, desc: '智能文档检索' }
+  ],
+  workOrders: [
+    { name: '问题工单', icon: 'issue-ticket', hot: true, description: '提交和跟踪技术问题' },
+    { name: '需求工单', icon: 'requirement-ticket', hot: false, description: '提交新功能或改进需求' },
+    { name: '运维工单', icon: 'ops-ticket', hot: true, description: '服务器和系统维护请求' },
+    { name: '故障工单', icon: 'fault-ticket', hot: false, description: '报告系统故障和错误' }
+  ]
+});
+
 // 监听窗口大小变化
 const handleResize = () => {
   isMobile.value = window.innerWidth <= 768
@@ -276,86 +310,37 @@ onUnmounted(() => {
   clearTimeout(scrollTimer)
 })
 
-// 示例数据
-const devTools = ref([
-  { name: 'CODING', icon: logoImg, hot: true, desc: '代码托管平台' },
-  { name: '集成平台', icon: logoImg, desc: '系统集成工具' },
-  { name: '伊利通服务', icon: logoImg, desc: '通用服务平台' },
-  { name: '权限中心', icon: logoImg, desc: '统一权限管理' },
-  { name: '低代码', icon: logoImg, hot: true, desc: '快速应用构建' },
-  { name: '数据平台', icon: logoImg, desc: '数据分析工具' },
-  { name: '测试平台', icon: logoImg, hot: true, desc: '自动化测试' },
-  { name: '监控中心', icon: logoImg, desc: '系统监控' }
-])
-
-const cloudServices = ref([
-  { name: '便签办公系统', icon: logoImg, hot: true, desc: '高效办公工具' },
-  { name: '私有云K8s-测试', icon: logoImg, hot: true, desc: '容器编排测试环境' },
-  { name: '私有云K8s-生产', icon: logoImg, hot: true, desc: '容器编排生产环境' },
-  { name: '云存储服务', icon: logoImg, desc: '对象存储' },
-  { name: '数据库服务', icon: logoImg, desc: '关系型数据库' },
-  { name: '消息队列', icon: logoImg, desc: '分布式消息服务' }
-])
-
-const aiTools = ref([
-  { name: 'YILI-GPT', icon: logoImg, hot: true, desc: 'AI助手' },
-  { name: 'AI代码助手', icon: logoImg, desc: '智能编程辅助' },
-  { name: 'AI数据分析', icon: logoImg, desc: '智能数据处理' },
-  { name: '知识库智能搜索', icon: logoImg, hot: true, desc: '智能文档检索' }
-])
-
-// 工单中心数据
-const workOrders = ref([
-  {
-    name: '问题工单',
-    icon: 'issue-ticket',
-    hot: true,
-    description: '提交和跟踪技术问题'
-  },
-  {
-    name: '需求工单',
-    icon: 'requirement-ticket',
-    hot: false,
-    description: '提交新功能或改进需求'
-  },
-  {
-    name: '运维工单',
-    icon: 'ops-ticket',
-    hot: true,
-    description: '服务器和系统维护请求'
-  },
-  {
-    name: '故障工单',
-    icon: 'fault-ticket',
-    hot: false,
-    description: '报告系统故障和错误'
-  }
-])
-
 // 计算属性
-const filteredWorkOrders = computed(() => {
-  if (!searchText.value) return workOrders.value
-  const text = searchText.value.toLowerCase()
-  return workOrders.value.filter(item => 
-    item.name.toLowerCase().includes(text) || 
-    item.description.toLowerCase().includes(text)
-  )
-})
-
-// 过滤搜索结果
 const filteredDevTools = computed(() => {
-  if (!searchText.value) return devTools.value;
-  return devTools.value.filter(item => 
+  if (!searchText.value) return allData.value.devTools;
+  return allData.value.devTools.filter(item => 
     item.name.toLowerCase().includes(searchText.value.toLowerCase()) ||
     (item.desc && item.desc.toLowerCase().includes(searchText.value.toLowerCase()))
   );
 });
 
 const filteredCloudServices = computed(() => {
-  if (!searchText.value) return cloudServices.value;
-  return cloudServices.value.filter(item => 
+  if (!searchText.value) return allData.value.cloudServices;
+  return allData.value.cloudServices.filter(item => 
     item.name.toLowerCase().includes(searchText.value.toLowerCase()) ||
     (item.desc && item.desc.toLowerCase().includes(searchText.value.toLowerCase()))
+  );
+});
+
+const filteredAiTools = computed(() => {
+  if (!searchText.value) return allData.value.aiTools;
+  return allData.value.aiTools.filter(item => 
+    item.name.toLowerCase().includes(searchText.value.toLowerCase()) ||
+    (item.desc && item.desc.toLowerCase().includes(searchText.value.toLowerCase()))
+  );
+});
+
+const filteredWorkOrders = computed(() => {
+  if (!searchText.value) return allData.value.workOrders;
+  const text = searchText.value.toLowerCase();
+  return allData.value.workOrders.filter(item => 
+    item.name.toLowerCase().includes(text) || 
+    item.description.toLowerCase().includes(text)
   );
 });
 
@@ -370,7 +355,7 @@ const handleLoadMore = () => {
   // 这里添加加载更多数据的逻辑
   
   // 模拟数据加载完毕
-  if (cloudServices.value.length > 15) {
+  if (allData.value.cloudServices.length > 15) {
     hasMore.value = false
   } else {
     // 模拟添加更多数据
@@ -378,12 +363,16 @@ const handleLoadMore = () => {
       { name: '新增服务1', icon: logoImg, desc: '新增云服务' },
       { name: '新增服务2', icon: logoImg, desc: '新增云服务' }
     ]
-    cloudServices.value.push(...newItems)
+    allData.value.cloudServices.push(...newItems)
   }
 }
 
 // 导航到指定页面
 const navigateTo = (page) => {
+  if (page === '技术门户') {
+    console.log('展示技术门户内容');
+    // 这里可以添加逻辑来显示技术门户的内容
+  }
   console.log(`导航到: ${page}`);
   // 这里可以添加导航逻辑，比如使用 Vue Router
 }
