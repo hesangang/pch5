@@ -201,8 +201,8 @@ const userInfo = ref({
   avatar: ''
 })
 
-// 整合数据
-const allData = ref({
+// 技术门户
+const techPortalData = ref({
   devTools: [
     { name: 'CODING', icon: logoImg, hot: true, desc: '代码托管平台' },
     { name: '集成平台', icon: logoImg, desc: '系统集成工具' },
@@ -312,33 +312,33 @@ onUnmounted(() => {
 
 // 计算属性
 const filteredDevTools = computed(() => {
-  if (!searchText.value) return allData.value.devTools;
-  return allData.value.devTools.filter(item => 
+  if (!searchText.value) return techPortalData.value.devTools;
+  return techPortalData.value.devTools.filter(item => 
     item.name.toLowerCase().includes(searchText.value.toLowerCase()) ||
     (item.desc && item.desc.toLowerCase().includes(searchText.value.toLowerCase()))
   );
 });
 
 const filteredCloudServices = computed(() => {
-  if (!searchText.value) return allData.value.cloudServices;
-  return allData.value.cloudServices.filter(item => 
+  if (!searchText.value) return techPortalData.value.cloudServices;
+  return techPortalData.value.cloudServices.filter(item => 
     item.name.toLowerCase().includes(searchText.value.toLowerCase()) ||
     (item.desc && item.desc.toLowerCase().includes(searchText.value.toLowerCase()))
   );
 });
 
 const filteredAiTools = computed(() => {
-  if (!searchText.value) return allData.value.aiTools;
-  return allData.value.aiTools.filter(item => 
+  if (!searchText.value) return techPortalData.value.aiTools;
+  return techPortalData.value.aiTools.filter(item => 
     item.name.toLowerCase().includes(searchText.value.toLowerCase()) ||
     (item.desc && item.desc.toLowerCase().includes(searchText.value.toLowerCase()))
   );
 });
 
 const filteredWorkOrders = computed(() => {
-  if (!searchText.value) return allData.value.workOrders;
+  if (!searchText.value) return techPortalData.value.workOrders;
   const text = searchText.value.toLowerCase();
-  return allData.value.workOrders.filter(item => 
+  return techPortalData.value.workOrders.filter(item => 
     item.name.toLowerCase().includes(text) || 
     item.description.toLowerCase().includes(text)
   );
@@ -351,19 +351,19 @@ const handleRefresh = () => {
 }
 
 const handleLoadMore = () => {
-  console.log('加载更多数据')
+  console.log('加载更多数据');
   // 这里添加加载更多数据的逻辑
   
   // 模拟数据加载完毕
-  if (allData.value.cloudServices.length > 15) {
-    hasMore.value = false
+  if (techPortalData.value.cloudServices.length > 15) {
+    hasMore.value = false;
   } else {
     // 模拟添加更多数据
     const newItems = [
       { name: '新增服务1', icon: logoImg, desc: '新增云服务' },
       { name: '新增服务2', icon: logoImg, desc: '新增云服务' }
-    ]
-    allData.value.cloudServices.push(...newItems)
+    ];
+    techPortalData.value.cloudServices.push(...newItems);
   }
 }
 
