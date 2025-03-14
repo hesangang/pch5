@@ -4,7 +4,7 @@
     <nav class="nav-header" :class="{ 'header-hidden': !isHeaderVisible }">
       <div class="logo">
         <img :src="logoImg" alt="Logo">
-        <span class="logo-text">技术门户</span>
+        <span class="logo-text">XXX平台</span>
       </div>
       <el-drawer v-if="isMobile" v-model="isMenuOpen" direction="ltr" size="80%">
         <el-menu default-active="1" class="el-menu-vertical-demo">
@@ -407,8 +407,11 @@ const navigateTo = (page) => {
 }
 
 .tech-portal {
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   min-height: 100vh;
+  width: 100%;
   background-color: var(--bg-color);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   overflow-x: hidden;
@@ -449,6 +452,7 @@ const navigateTo = (page) => {
   font-size: 1.6rem;
   font-weight: 600;
   color: var(--primary-color);
+  content: '开放平台';
 }
 
 .nav-menu {
@@ -525,11 +529,13 @@ const navigateTo = (page) => {
 
 /* 内容区样式 */
 .content {
+  flex: 1;
   max-width: 120rem;
   margin: 0 auto;
   padding: 2rem;
   width: 100%;
   box-sizing: border-box;
+  padding-bottom: 6rem; /* 确保内容不与底栏重合 */
 }
 
 .page-header {
@@ -684,7 +690,7 @@ const navigateTo = (page) => {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -694,10 +700,11 @@ const navigateTo = (page) => {
 .modal-content {
   background-color: var(--card-bg);
   border-radius: var(--border-radius);
-  width: 36rem;
+  width: 32rem;
   max-width: 90%;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   overflow: hidden;
+  padding: 2.5rem;
 }
 
 .modal-header {
@@ -737,10 +744,10 @@ const navigateTo = (page) => {
 
 .form-group input {
   width: 100%;
-  padding: 0.9rem 1.1rem;
+  padding: 1.2rem 1.5rem;
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   outline: none;
   transition: var(--transition);
   box-sizing: border-box;
@@ -748,7 +755,7 @@ const navigateTo = (page) => {
 
 .form-group input:focus {
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+  box-shadow: 0 0 0 4px rgba(24, 144, 255, 0.3);
 }
 
 .remember-me {
@@ -824,15 +831,15 @@ const navigateTo = (page) => {
 
 /* 移动端底部导航 */
 .mobile-tabbar {
-  display: none;
+  display: flex;
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   height: 5rem;
-  background: var(--card-bg);
-  box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-  z-index: 100;
+  background: #ffffff; /* 设置为不透明的白色背景 */
+  box-shadow: none;
+  z-index: 1000;
   justify-content: space-around;
   align-items: center;
   padding-bottom: env(safe-area-inset-bottom);
@@ -865,8 +872,8 @@ const navigateTo = (page) => {
 }
 
 .tab-icon {
-  width: 2.2rem;
-  height: 2.2rem;
+  width: 1.8rem;
+  height: 1.8rem;
   margin-bottom: 0.3rem;
   background-size: contain;
   background-position: center;
