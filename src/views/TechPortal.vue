@@ -850,7 +850,7 @@ const navigateTo = (page) => {
   justify-content: center;
   flex: 1;
   height: 100%;
-  color: var(--text-light);
+  color: var(--text-color);
   font-size: 1.2rem;
   font-weight: 500;
   transition: color 0.3s ease;
