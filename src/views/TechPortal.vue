@@ -4,21 +4,27 @@
     <nav class="nav-header" :class="{ 'header-hidden': !isHeaderVisible }">
       <div class="logo">
         <img :src="logoImg" alt="Logo">
-        <span class="logo-text">XXX平台</span>
+        <span class="logo-text">{{ pageConfig[currentPage].title }}</span>
       </div>
       <el-drawer v-if="isMobile" v-model="isMenuOpen" direction="ltr" size="80%">
-        <el-menu default-active="1" class="el-menu-vertical-demo">
-          <el-menu-item index="1">技术门户</el-menu-item>
-          <el-menu-item index="2">工单中心</el-menu-item>
-          <el-menu-item index="3">研发指引</el-menu-item>
-          <el-menu-item index="4">开发工具</el-menu-item>
+        <el-menu :default-active="currentPage" class="el-menu-vertical-demo">
+          <el-menu-item v-for="(page, key) in pageConfig" 
+                        :key="key" 
+                        :index="key"
+                        @click="navigateTo(key)">
+            {{ page.title }}
+          </el-menu-item>
         </el-menu>
       </el-drawer>
       <div class="nav-menu" v-else :class="{ 'active': isMenuOpen }">
-        <a href="#" class="nav-item active">技术门户</a>
-        <a href="#" class="nav-item">工单中心</a>
-        <a href="#" class="nav-item">研发指引</a>
-        <a href="#" class="nav-item">开发工具</a>
+        <a v-for="(page, key) in pageConfig" 
+           :key="key"
+           href="#" 
+           class="nav-item"
+           :class="{ 'active': currentPage === key }"
+           @click.prevent="navigateTo(key)">
+          {{ page.title }}
+        </a>
       </div>
       <div class="user-info" @click="showLoginModal = true">
         <img :src="userInfo.avatar || avatarImg" alt="Avatar" class="avatar">
@@ -37,126 +43,67 @@
     <!-- 主要内容区 -->
     <pull-refresh @refresh="handleRefresh" @loadMore="handleLoadMore" :has-more="hasMore">
       <div class="content">
-        <!-- 研发工具区域 -->
-        <section class="card-section">
-          <div class="category-header">
-            <h3 class="category-title">研发工具</h3>
-          </div>
-          <div class="card-grid">
-            <div v-for="(item, index) in filteredDevTools" 
-                :key="index" 
-                class="card"
-                @click="openCard(item)"
-                @touchstart="handleTouchStart"
-                @touchend="handleTouchEnd">
-              <div class="card-content">
-                <span class="card-name">{{ item.name }}</span>
-              </div>
-              <span v-if="item.hot" class="hot-tag">热</span>
+        <!-- 动态渲染当前页面内容 -->
+        <template v-if="currentPage === '技术门户'">
+          <section v-for="(category, index) in currentPageData" :key="index" class="card-section">
+            <div class="category-header">
+              <h3 class="category-title">{{ category.category }}</h3>
             </div>
-          </div>
-        </section>
+            <div class="card-grid">
+              <div v-for="(item, itemIndex) in category.items" 
+                  :key="itemIndex" 
+                  class="card"
+                  @click="openCard(item)"
+                  @touchstart="handleTouchStart"
+                  @touchend="handleTouchEnd">
+                <div class="card-content">
+                  <span class="card-name">{{ item.name }}</span>
+                </div>
+                <span v-if="item.hot" class="hot-tag">热</span>
+              </div>
+            </div>
+          </section>
+        </template>
 
-        <!-- 混合云区域 -->
-        <section class="card-section">
-          <div class="category-header">
-            <h3 class="category-title">混合云</h3>
-          </div>
-          <div class="card-grid">
-            <div v-for="(item, index) in filteredCloudServices" 
-                :key="index" 
-                class="card"
-                @click="openCard(item)"
-                @touchstart="handleTouchStart"
-                @touchend="handleTouchEnd">
-              <div class="card-content">
-                <span class="card-name">{{ item.name }}</span>
-              </div>
-              <span v-if="item.hot" class="hot-tag">热</span>
+        <template v-else-if="currentPage === '工单中心'">
+          <section v-for="(category, index) in currentPageData" :key="index" class="card-section">
+            <div class="category-header">
+              <h3 class="category-title">{{ category.category }}</h3>
             </div>
-          </div>
-        </section>
-        
-        <!-- AI工具区域 -->
-        <section class="card-section">
-          <div class="category-header">
-            <h3 class="category-title">AI工具</h3>
-          </div>
-          <div class="card-grid">
-            <div v-for="(item, index) in filteredAiTools" 
-                :key="index" 
-                class="card"
-                @click="openCard(item)"
-                @touchstart="handleTouchStart"
-                @touchend="handleTouchEnd">
-              <div class="card-content">
-                <span class="card-name">{{ item.name }}</span>
+            <div class="card-grid">
+              <div v-for="(item, itemIndex) in category.items" 
+                  :key="itemIndex" 
+                  class="card"
+                  @click="openCard(item)"
+                  @touchstart="handleTouchStart"
+                  @touchend="handleTouchEnd">
+                <div class="card-content">
+                  <span class="card-name">{{ item.name }}</span>
+                </div>
+                <span v-if="item.hot" class="hot-tag">热</span>
               </div>
-              <span v-if="item.hot" class="hot-tag">热</span>
             </div>
+          </section>
+        </template>
+
+        <template v-else>
+          <div class="coming-soon">
+            <h2>功能开发中</h2>
+            <p>敬请期待</p>
           </div>
-        </section>
-        
-        <!-- 云服务区域 -->
-        <section class="card-section">
-          <div class="category-header">
-            <h3 class="category-title">云服务</h3>
-          </div>
-          <div class="card-grid">
-            <div v-for="(item, index) in filteredCloudServices" 
-                :key="index" 
-                class="card"
-                @click="openCard(item)"
-                @touchstart="handleTouchStart"
-                @touchend="handleTouchEnd">
-              <div class="card-content">
-                <span class="card-name">{{ item.name }}</span>
-              </div>
-              <span v-if="item.hot" class="hot-tag">热</span>
-            </div>
-          </div>
-        </section>
-        
-        <!-- 工单中心区域 -->
-        <section v-for="(category, index) in workOrdersData" :key="index" class="card-section">
-          <div class="category-header">
-            <h3 class="category-title">{{ category.category }}</h3>
-          </div>
-          <div class="card-grid">
-            <div v-for="(item, itemIndex) in category.items" 
-                :key="itemIndex" 
-                class="card"
-                @click="openCard(item)"
-                @touchstart="handleTouchStart"
-                @touchend="handleTouchEnd">
-              <div class="card-content">
-                <span class="card-name">{{ item.name }}</span>
-              </div>
-              <span v-if="item.hot" class="hot-tag">热</span>
-            </div>
-          </div>
-        </section>
-        
+        </template>
       </div>
     </pull-refresh>
     
     <!-- 移动端底部导航 -->
-    <div class="mobile-tabbar" v-if="isMobile">
-      <div class="tab-item" @click="navigateTo('技术门户')">
-        <div class="tab-icon home-icon"></div>
-        <span>技术门户</span>
-      </div>
-      <div class="tab-item" @click="navigateTo('工单中心')">
-        <div class="tab-icon tools-icon"></div>
-        <span>工单中心</span>
-      </div>
-      <div class="tab-item" @click="navigateTo('研发指引')">
-        <div class="tab-icon cloud-icon"></div>
-        <span>研发指引</span>
-      </div>
-      <div class="tab-item" @click="navigateTo('开发工具')">
-        <div class="tab-icon user-icon"></div>
-        <span>开发工具</span>
+    <div class="mobile-tabbar" v-if="isMobile" :class="{ 'tabbar-hidden': !isTabbarVisible }">
+      <div v-for="(page, key) in pageConfig" 
+           :key="key"
+           class="tab-item" 
+           :class="{ 'active': currentPage === key }"
+           @click="navigateTo(key)">
+        <div class="tab-icon" :class="`${key.toLowerCase()}-icon`"></div>
+        <span>{{ page.title }}</span>
       </div>
     </div>
 
@@ -204,6 +151,7 @@ const showLoginModal = ref(false)
 const isHeaderVisible = ref(true)
 const isTabbarVisible = ref(true)
 const isMobile = ref(window.innerWidth <= 768)
+const currentPage = ref('技术门户') // 添加当前页面状态
 let lastScrollTop = 0
 let scrollTimer = null
 
@@ -308,6 +256,31 @@ const workOrdersData = ref([
     ]
   }
 ]);
+
+// 页面配置
+const pageConfig = {
+  '技术门户': {
+    data: techPortalData,
+    title: '技术门户'
+  },
+  '工单中心': {
+    data: workOrdersData,
+    title: '工单中心'
+  },
+  '研发指引': {
+    data: techPortalData,
+    title: '研发指引'
+  },
+  '开发工具': {
+    data: techPortalData,
+    title: '开发工具'
+  }
+}
+
+// 计算当前页面数据
+const currentPageData = computed(() => {
+  return pageConfig[currentPage.value]?.data.value || []
+})
 
 // 监听窗口大小变化
 const handleResize = () => {
@@ -443,12 +416,12 @@ const handleLoadMore = () => {
 
 // 导航到指定页面
 const navigateTo = (page) => {
-  if (page === '技术门户') {
-    console.log('展示技术门户内容');
-    // 这里可以添加逻辑来显示技术门户的内容
-  }
-  console.log(`导航到: ${page}`);
-  // 这里可以添加导航逻辑，比如使用 Vue Router
+  currentPage.value = page
+  // 重置滚动位置
+  window.scrollTo(0, 0)
+  // 显示头部和底部导航
+  isHeaderVisible.value = true
+  isTabbarVisible.value = true
 }
 </script>
 
@@ -598,7 +571,7 @@ const navigateTo = (page) => {
   padding: 2rem;
   width: 100%;
   box-sizing: border-box;
-  padding-bottom: 6rem; /* 确保内容不与底栏重合 */
+  padding-bottom: calc(6rem + env(safe-area-inset-bottom)); /* 增加底部内边距，为固定导航栏留出空间 */
 }
 
 .page-header {
@@ -900,17 +873,23 @@ const navigateTo = (page) => {
   left: 0;
   right: 0;
   height: 5rem;
-  background: #ffffff; /* 设置为不透明的白色背景 */
-  box-shadow: none;
+  background: #ffffff;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
   z-index: 1000;
   justify-content: space-around;
   align-items: center;
   padding-bottom: env(safe-area-inset-bottom);
   transition: transform 0.3s ease;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .tabbar-hidden {
-  transform: translateY(100%);
+  transform: none;
 }
 
 .tab-item {
@@ -924,39 +903,42 @@ const navigateTo = (page) => {
   font-size: 1.2rem;
   font-weight: 500;
   transition: color 0.3s ease;
+  padding: 0.5rem 0;
 }
 
 .tab-item.active {
   color: var(--primary-color);
 }
 
-.tab-item:hover {
-  color: var(--primary-color);
-}
-
 .tab-icon {
-  width: 1.8rem;
-  height: 1.8rem;
+  width: 2.4rem;
+  height: 2.4rem;
   margin-bottom: 0.3rem;
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
 }
 
-.home-icon {
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%231890ff"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>');
+/* 底部导航图标 */
+.技术门户-icon {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23666"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>');
 }
 
-.tools-icon {
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23999"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>');
+.工单中心-icon {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23666"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>');
 }
 
-.cloud-icon {
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23999"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>');
+.研发指引-icon {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23666"><path d="M12 2L1 12h3v9h7v-6h2v6h7v-9h3L12 2zm0 2.84L19.93 12H18v7h-4v-6H10v6H6v-7H4.07L12 4.84z"/></svg>');
 }
 
-.user-icon {
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23999"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>');
+.开发工具-icon {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23666"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>');
+}
+
+/* 激活状态的图标颜色 */
+.tab-item.active .tab-icon {
+  filter: invert(45%) sepia(98%) saturate(1233%) hue-rotate(199deg) brightness(97%) contrast(101%);
 }
 
 /* 移动端适配增强 */
@@ -1030,7 +1012,17 @@ const navigateTo = (page) => {
   }
   
   .mobile-tabbar {
-    display: flex;
+    background: #ffffff;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
+  }
+  
+  .tab-item {
+    font-size: 1.1rem;
+  }
+  
+  .tab-icon {
+    width: 2.2rem;
+    height: 2.2rem;
   }
   
   .page-header {
@@ -1136,6 +1128,15 @@ const navigateTo = (page) => {
     right: 0.3rem;
     line-height: 1.3rem;
   }
+  
+  .tab-item {
+    font-size: 1rem;
+  }
+  
+  .tab-icon {
+    width: 2rem;
+    height: 2rem;
+  }
 }
 
 /* 超小屏幕适配 */
@@ -1215,5 +1216,80 @@ const navigateTo = (page) => {
   padding: 0.2rem 0.4rem;
   border-radius: 4px;
   font-size: 0.8rem;
+}
+
+/* 开发中提示样式 */
+.coming-soon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 40rem;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.coming-soon h2 {
+  font-size: 2.4rem;
+  margin-bottom: 1rem;
+}
+
+.coming-soon p {
+  font-size: 1.6rem;
+}
+
+/* 移除重复的导航样式 */
+.nav-menu {
+  display: flex;
+  gap: 2.5rem;
+}
+
+.nav-item {
+  color: var(--text-color);
+  text-decoration: none;
+  font-size: 1.4rem;
+  font-weight: 500;
+  padding: 0.6rem 0;
+  position: relative;
+  transition: var(--transition);
+}
+
+.nav-item.active {
+  color: var(--primary-color);
+}
+
+.nav-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 0.2rem;
+  background-color: var(--primary-color);
+  border-radius: 0.1rem;
+}
+
+.nav-item:hover {
+  color: var(--primary-color);
+}
+
+/* 移动端菜单样式优化 */
+.el-menu-vertical-demo {
+  border-right: none;
+}
+
+.el-menu-item {
+  height: 5rem;
+  line-height: 5rem;
+  font-size: 1.4rem;
+}
+
+.el-menu-item.is-active {
+  color: var(--primary-color);
+  background-color: rgba(24, 144, 255, 0.1);
+}
+
+.el-menu-item:hover {
+  background-color: rgba(24, 144, 255, 0.05);
 }
 </style>
