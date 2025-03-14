@@ -117,6 +117,26 @@
           </div>
         </section>
         
+        <!-- 工单中心区域 -->
+        <section v-for="(category, index) in workOrdersData" :key="index" class="card-section">
+          <div class="category-header">
+            <h3 class="category-title">{{ category.category }}</h3>
+          </div>
+          <div class="card-grid">
+            <div v-for="(item, itemIndex) in category.items" 
+                :key="itemIndex" 
+                class="card"
+                @click="openCard(item)"
+                @touchstart="handleTouchStart"
+                @touchend="handleTouchEnd">
+              <div class="card-content">
+                <span class="card-name">{{ item.name }}</span>
+              </div>
+              <span v-if="item.hot" class="hot-tag">热</span>
+            </div>
+          </div>
+        </section>
+        
       </div>
     </pull-refresh>
     
@@ -202,38 +222,92 @@ const userInfo = ref({
 })
 
 // 技术门户
-const techPortalData = ref({
-  devTools: [
-    { name: 'CODING', icon: logoImg, hot: true, desc: '代码托管平台' },
-    { name: '集成平台', icon: logoImg, desc: '系统集成工具' },
-    { name: '伊利通服务', icon: logoImg, desc: '通用服务平台' },
-    { name: '权限中心', icon: logoImg, desc: '统一权限管理' },
-    { name: '低代码', icon: logoImg, hot: true, desc: '快速应用构建' },
-    { name: '数据平台', icon: logoImg, desc: '数据分析工具' },
-    { name: '测试平台', icon: logoImg, hot: true, desc: '自动化测试' },
-    { name: '监控中心', icon: logoImg, desc: '系统监控' }
-  ],
-  cloudServices: [
-    { name: '便签办公系统', icon: logoImg, hot: true, desc: '高效办公工具' },
-    { name: '私有云K8s-测试', icon: logoImg, hot: true, desc: '容器编排测试环境' },
-    { name: '私有云K8s-生产', icon: logoImg, hot: true, desc: '容器编排生产环境' },
-    { name: '云存储服务', icon: logoImg, desc: '对象存储' },
-    { name: '数据库服务', icon: logoImg, desc: '关系型数据库' },
-    { name: '消息队列', icon: logoImg, desc: '分布式消息服务' }
-  ],
-  aiTools: [
-    { name: 'YILI-GPT', icon: logoImg, hot: true, desc: 'AI助手' },
-    { name: 'AI代码助手', icon: logoImg, desc: '智能编程辅助' },
-    { name: 'AI数据分析', icon: logoImg, desc: '智能数据处理' },
-    { name: '知识库智能搜索', icon: logoImg, hot: true, desc: '智能文档检索' }
-  ],
-  workOrders: [
-    { name: '问题工单', icon: 'issue-ticket', hot: true, description: '提交和跟踪技术问题' },
-    { name: '需求工单', icon: 'requirement-ticket', hot: false, description: '提交新功能或改进需求' },
-    { name: '运维工单', icon: 'ops-ticket', hot: true, description: '服务器和系统维护请求' },
-    { name: '故障工单', icon: 'fault-ticket', hot: false, description: '报告系统故障和错误' }
-  ]
-});
+const techPortalData = ref([
+  {
+    category: '研发工具',
+    items: [
+      { name: 'CODING', icon: logoImg, hot: true, desc: '代码托管平台' },
+      { name: '集成平台', icon: logoImg, desc: '系统集成工具' },
+      { name: '伊利通服务', icon: logoImg, desc: '通用服务平台' },
+      { name: '权限中心', icon: logoImg, desc: '统一权限管理' },
+      { name: '低代码', icon: logoImg, hot: true, desc: '快速应用构建' },
+      { name: '数据平台', icon: logoImg, desc: '数据分析工具' },
+      { name: '测试平台', icon: logoImg, hot: true, desc: '自动化测试' },
+      { name: '监控中心', icon: logoImg, desc: '系统监控' }
+    ]
+  },
+  {
+    category: '混合云',
+    items: [
+      { name: '便签办公系统', icon: logoImg, hot: true, desc: '高效办公工具' },
+      { name: '私有云K8s-测试', icon: logoImg, hot: true, desc: '容器编排测试环境' },
+      { name: '私有云K8s-生产', icon: logoImg, hot: true, desc: '容器编排生产环境' },
+      { name: '云存储服务', icon: logoImg, desc: '对象存储' },
+      { name: '数据库服务', icon: logoImg, desc: '关系型数据库' },
+      { name: '消息队列', icon: logoImg, desc: '分布式消息服务' }
+    ]
+  },
+  {
+    category: 'AI工具',
+    items: [
+      { name: 'YILI-GPT', icon: logoImg, hot: true, desc: 'AI助手' },
+      { name: 'AI代码助手', icon: logoImg, desc: '智能编程辅助' },
+      { name: 'AI数据分析', icon: logoImg, desc: '智能数据处理' },
+      { name: '知识库智能搜索', icon: logoImg, hot: true, desc: '智能文档检索' }
+    ]
+  },
+  {
+    category: '云服务',
+    items: [
+      { name: '便签办公系统', icon: logoImg, hot: true, desc: '高效办公工具' },
+      { name: '私有云K8s-测试', icon: logoImg, hot: true, desc: '容器编排测试环境' },
+      { name: '私有云K8s-生产', icon: logoImg, hot: true, desc: '容器编排生产环境' },
+      { name: '云存储服务', icon: logoImg, desc: '对象存储' },
+      { name: '数据库服务', icon: logoImg, desc: '关系型数据库' },
+      { name: '消息队列', icon: logoImg, desc: '分布式消息服务' }
+    ]
+  }
+]);
+
+// 工单中心数据
+const workOrdersData = ref([
+  {
+    category: '系统变更',
+    items: [
+      { name: '系统流量申请', icon: 'flow-icon', hot: true, desc: '系统变更相关申请' },
+      { name: '系统变更申请', icon: 'change-icon', desc: '系统变更相关申请' },
+      { name: '网络策略申请', icon: 'network-icon', desc: '网络策略相关申请' },
+      { name: '用户权限变更', icon: 'permission-icon', desc: '用户权限相关变更' }
+    ]
+  },
+  {
+    category: '人员',
+    items: [
+      { name: '人员进场', icon: 'entry-icon', desc: '人员进场相关申请' },
+      { name: '人员离场', icon: 'exit-icon', desc: '人员离场相关申请' }
+    ]
+  },
+  {
+    category: '项目',
+    items: [
+      { name: '新签约包需求审批', icon: 'package-icon', desc: '项目相关审批' },
+      { name: '采购需求审批', icon: 'purchase-icon', desc: '采购相关审批' }
+    ]
+  },
+  {
+    category: '技术',
+    items: [
+      { name: '集成平台系统链路入口注册', icon: 'integration-icon', desc: '技术相关注册' },
+      { name: '大数据工单', icon: 'bigdata-icon', desc: '技术相关工单' }
+    ]
+  },
+  {
+    category: 'AI工具',
+    items: [
+      { name: '人工智能解决方案工单', icon: 'ai-icon', desc: 'AI工具相关工单' }
+    ]
+  }
+]);
 
 // 监听窗口大小变化
 const handleResize = () => {
@@ -312,33 +386,33 @@ onUnmounted(() => {
 
 // 计算属性
 const filteredDevTools = computed(() => {
-  if (!searchText.value) return techPortalData.value.devTools;
-  return techPortalData.value.devTools.filter(item => 
+  if (!searchText.value) return techPortalData.value[0].items;
+  return techPortalData.value[0].items.filter(item => 
     item.name.toLowerCase().includes(searchText.value.toLowerCase()) ||
     (item.desc && item.desc.toLowerCase().includes(searchText.value.toLowerCase()))
   );
 });
 
 const filteredCloudServices = computed(() => {
-  if (!searchText.value) return techPortalData.value.cloudServices;
-  return techPortalData.value.cloudServices.filter(item => 
+  if (!searchText.value) return techPortalData.value[1].items;
+  return techPortalData.value[1].items.filter(item => 
     item.name.toLowerCase().includes(searchText.value.toLowerCase()) ||
     (item.desc && item.desc.toLowerCase().includes(searchText.value.toLowerCase()))
   );
 });
 
 const filteredAiTools = computed(() => {
-  if (!searchText.value) return techPortalData.value.aiTools;
-  return techPortalData.value.aiTools.filter(item => 
+  if (!searchText.value) return techPortalData.value[2].items;
+  return techPortalData.value[2].items.filter(item => 
     item.name.toLowerCase().includes(searchText.value.toLowerCase()) ||
     (item.desc && item.desc.toLowerCase().includes(searchText.value.toLowerCase()))
   );
 });
 
 const filteredWorkOrders = computed(() => {
-  if (!searchText.value) return techPortalData.value.workOrders;
+  if (!searchText.value) return techPortalData.value[3].items;
   const text = searchText.value.toLowerCase();
-  return techPortalData.value.workOrders.filter(item => 
+  return techPortalData.value[3].items.filter(item => 
     item.name.toLowerCase().includes(text) || 
     item.description.toLowerCase().includes(text)
   );
@@ -355,7 +429,7 @@ const handleLoadMore = () => {
   // 这里添加加载更多数据的逻辑
   
   // 模拟数据加载完毕
-  if (techPortalData.value.cloudServices.length > 15) {
+  if (techPortalData.value[1].items.length > 15) {
     hasMore.value = false;
   } else {
     // 模拟添加更多数据
@@ -363,7 +437,7 @@ const handleLoadMore = () => {
       { name: '新增服务1', icon: logoImg, desc: '新增云服务' },
       { name: '新增服务2', icon: logoImg, desc: '新增云服务' }
     ];
-    techPortalData.value.cloudServices.push(...newItems);
+    techPortalData.value[1].items.push(...newItems);
   }
 }
 
