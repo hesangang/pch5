@@ -176,7 +176,7 @@ const techPortalData = ref([
     items: [
       { name: 'CODING', icon: logoImg, hot: true, desc: '代码托管平台' },
       { name: '集成平台', icon: logoImg, desc: '系统集成工具' },
-      { name: '伊利通服务', icon: logoImg, desc: '通用服务平台' },
+      { name: '山岗通服务', icon: logoImg, desc: '通用服务平台' },
       { name: '权限中心', icon: logoImg, desc: '统一权限管理' },
       { name: '低代码', icon: logoImg, hot: true, desc: '快速应用构建' },
       { name: '数据平台', icon: logoImg, desc: '数据分析工具' },
@@ -198,7 +198,7 @@ const techPortalData = ref([
   {
     category: 'AI工具',
     items: [
-      { name: 'YILI-GPT', icon: logoImg, hot: true, desc: 'AI助手' },
+      { name: 'sanger-GPT', icon: logoImg, hot: true, desc: 'AI助手' },
       { name: 'AI代码助手', icon: logoImg, desc: '智能编程辅助' },
       { name: 'AI数据分析', icon: logoImg, desc: '智能数据处理' },
       { name: '知识库智能搜索', icon: logoImg, hot: true, desc: '智能文档检索' }
